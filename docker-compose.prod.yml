@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+    postgres:
+        image: postgres:14.5
+        restart: always
+        user: postgres
+        environment:
+            - POSTGRES_PASSWORD=postgres_password
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        stdin_open: true
+        tty: true
+
+    backend-shopping-list:
+        image: lakleij/gogrocery-backend-user
+        environment:
+            - ENVIRONMENT=prod
+            - PORT=8102
+            - DB_USERNAME=postgres
+            - DB_PASSWORD=postgres_password
+            - DB_DATABASE=postgres
+            - DB_HOST=postgres
+            - DB_PORT=5432
+            - DB_DIALECT=postgres
+        expose:
+            - '8102'
+        depends_on:
+            postgres:
+                condition: service_healthy
+        stdin_open: true
+        tty: true

@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+    postgres:
+        image: postgres:14.5
+        restart: always
+        user: postgres
+        environment:
+            - POSTGRES_PASSWORD=postgres_password
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        stdin_open: true
+        tty: true
+
+    shopping-list:
+        build:
+            dockerfile: dockerfiles/Dockerfile.dev
+            context: .
+            args:
+                - NPM_TOKEN=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
+        environment:
+            - ENVIRONMENT=dev
+            - PORT=6300
+        volumes:
+            - /app/node_modules
+            - .:/app
+        ports:
+            - 6300:6300
+        depends_on:
+            postgres:
+                condition: service_healthy

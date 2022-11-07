@@ -1,0 +1,35 @@
+{
+	"dependencies": {
+		"body-parser": "1.20.0",
+		"cors": "2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "4.18.1",
+		"helmet": "^6.0.0",
+		"jsonwebtoken": "^8.5.1",
+		"nodemailer": "^6.8.0",
+		"express-graphql": "^0.12.0",
+		"graphql": "^15.8.0",
+		"pg": "8.8.0",
+		"ts-node": "~10.9.1",
+		"sequelize": "^6.25.3",
+		"sequelize-typescript": "^2.1.5",
+		"tslib": "^2.4.0",
+		"@lvdkleij/authentication-middleware": "1.0.42"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.12",
+		"@types/express": "^4.17.14",
+		"@types/jsonwebtoken": "^8.5.9",
+		"@types/node": "^14.18.31",
+		"@types/nodemailer": "^6.4.6",
+		"@types/pg": "^8.6.5",
+		"nodemon": "^2.0.20",
+		"ts-node": "~10.9.1",
+		"typescript": "~4.7.4"
+	},
+	"scripts": {
+		"start": "nodemon ./src/server.ts",
+		"start:prod": "ts-node www/server.js",
+		"build": "tsc -p ."
+	}
+}

@@ -1,0 +1,17 @@
+FROM node:18-alpine3.15
+ARG NPM_TOKEN
+WORKDIR /app
+
+# Ensure clean installation
+RUN npm cache clean --force
+
+# Install dependencies
+COPY .npmrc .npmrc  
+COPY package*.json ./
+
+RUN npm install
+RUN rm -f .npmrc
+
+COPY . .
+
+CMD ["npm", "run", "start"]
