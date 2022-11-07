@@ -40,6 +40,13 @@ export class AppUser extends Model {
 	})
 	name!: string;
 
+	@Column({
+		type: DataType.STRING(2),
+		allowNull: false,
+		defaultValue: 'en',
+	})
+	language!: string;
+
 	@HasOne(() => UserVerification)
 	verification!: UserVerification;
 
