@@ -46,13 +46,3 @@ export class AppUser extends Model {
 	@HasMany(() => UserRefreshToken)
 	refreshTokens!: UserRefreshToken[];
 }
-
-export const AppUserSchema = `
-type AppUser {
-	id: Int!
-	email: String!
-	name: String!
-	createdAt: String!
-	verification: UserVerification!
-	refreshTokens: [UserRefreshToken]
-}`;

@@ -5,6 +5,8 @@ import helmet from 'helmet';
 
 import rootRouter from './app/app.routes';
 import { sequelize } from './app/libs/database';
+import { AuthController } from '@lvdkleij/authentication-middleware';
+import { config } from './config';
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use('/', rootRouter);
 
 // reduce fingerprinting
 app.disable('x-powered-by');
+
+export const authController = new AuthController(config.database);
 
 const start = async (): Promise<void> => {
 	try {

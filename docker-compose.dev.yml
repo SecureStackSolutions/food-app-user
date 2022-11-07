@@ -14,7 +14,7 @@ services:
         stdin_open: true
         tty: true
 
-    shopping-list:
+    backend-user:
         build:
             dockerfile: dockerfiles/Dockerfile.dev
             context: .

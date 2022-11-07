@@ -37,11 +37,3 @@ export class UserVerification extends Model {
 	@BelongsTo(() => AppUser)
 	user!: AppUser;
 }
-
-export const userVerificationSchema = `
-type UserVerification {
-	userId: Int!
-	code: String!
-	validUntil: String!
-	user: AppUser!
-}`;

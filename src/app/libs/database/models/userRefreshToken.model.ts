@@ -31,10 +31,3 @@ export class UserRefreshToken extends Model {
 	@BelongsTo(() => AppUser)
 	user!: AppUser;
 }
-
-export const userRefreshTokenSchema = `
-type UserRefreshToken {
-	userId: Int!
-	token: String!
-	user: AppUser!
-}`;

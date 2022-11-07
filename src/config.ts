@@ -1,3 +1,5 @@
+import { Dialect } from 'sequelize';
+
 const _config: any = {
 	dev: {
 		database: {
@@ -16,7 +18,7 @@ const _config: any = {
 			database: process.env.DB_DATABASE,
 			host: process.env.DB_HOST,
 			port: process.env.DB_PORT,
-			dialect: process.env.DB_DIALECT,
+			dialect: process.env.DB_DIALECT as Dialect,
 		},
 	},
 };
