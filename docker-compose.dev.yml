@@ -8,8 +8,8 @@ services:
             - POSTGRES_PASSWORD=postgres_password
         healthcheck:
             test: ['CMD-SHELL', 'pg_isready']
-            interval: 5s
-            timeout: 5s
+            interval: 4s
+            timeout: 4s
             retries: 5
         stdin_open: true
         tty: true
@@ -22,6 +22,7 @@ services:
                 - NPM_TOKEN=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
         environment:
             - ENVIRONMENT=dev
+            - REFRESH_TOKEN_PAYLOAD_SECRET=my-super-secret-3
             - PORT=6300
         volumes:
             - /app/node_modules

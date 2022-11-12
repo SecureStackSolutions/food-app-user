@@ -11,9 +11,7 @@ import { config } from './config';
 const app = express();
 
 // Middelware
-if (process.env.ENVIRONMENT !== 'dev') {
-	app.use(helmet());
-}
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/', rootRouter);
@@ -21,7 +19,10 @@ app.use('/', rootRouter);
 // reduce fingerprinting
 app.disable('x-powered-by');
 
-export const authController = new AuthController(config.database);
+export const authController = new AuthController(config.database, {
+	refreshTokenPayloadSecret: process.env
+		.REFRESH_TOKEN_PAYLOAD_SECRET as string,
+});
 
 const start = async (): Promise<void> => {
 	try {

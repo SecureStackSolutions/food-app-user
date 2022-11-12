@@ -45,7 +45,14 @@ export class AppUser extends Model {
 		allowNull: false,
 		defaultValue: 'en',
 	})
-	language!: string;
+	preferredLanguage!: string;
+
+	@Column({
+		type: DataType.BOOLEAN,
+		allowNull: false,
+		defaultValue: false,
+	})
+	isVerified!: boolean;
 
 	@HasOne(() => UserVerification)
 	verification!: UserVerification;

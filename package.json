@@ -12,7 +12,7 @@
 		"sequelize": "^6.25.3",
 		"sequelize-typescript": "^2.1.5",
 		"tslib": "^2.4.0",
-		"@lvdkleij/authentication-middleware": "1.0.54"
+		"@lvdkleij/authentication-middleware": "1.0.60"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.12",
