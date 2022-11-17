@@ -23,12 +23,12 @@ services:
         environment:
             - ENVIRONMENT=dev
             - REFRESH_TOKEN_PAYLOAD_SECRET=my-super-secret3
-            - PORT=6300
+            - PORT=49200
         volumes:
             - /app/node_modules
             - .:/app
         ports:
-            - 6300:6300
+            - 49200:49200
         depends_on:
             postgres:
                 condition: service_healthy

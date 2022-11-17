@@ -3,11 +3,11 @@ import { UserController } from './user.controller';
 
 const router = Router();
 
-router.post('/signUp', UserController.signUpUser);
+router.post('/signUpUser', UserController.signUpUser);
 router.post(
 	'/generateVerificationCode',
 	UserController.generateVerificationCode
 );
-router.post('/verifyUser', UserController.verifyVerificationCode);
+router.post('/verifyVerificationCode', UserController.verifyVerificationCode);
 
 export { router };

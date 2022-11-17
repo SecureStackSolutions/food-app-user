@@ -7,8 +7,16 @@ import rootRouter from './app/app.routes';
 import { sequelize } from './app/libs/database';
 import { AuthController } from '@lvdkleij/authentication-middleware';
 import { config } from './config';
+import { Kafka } from 'kafkajs';
 
 const app = express();
+
+// const kafka = new Kafka({
+// 	clientId: 'user',
+// 	brokers: ['kafka:9092'],
+// });
+
+// export const kafkaProducer = kafka.producer();
 
 // Middelware
 app.use(helmet());
