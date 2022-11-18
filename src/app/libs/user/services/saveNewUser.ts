@@ -1,9 +1,7 @@
 import { AppUser, UserVerification } from '../../database/models';
 import { getFutureDate, getVerificationCode } from '../helpers';
 
-export async function saveNewUserService(
-	data: InsertUserType
-): Promise<AppUser> {
+export async function saveNewUser(data: InsertUserType): Promise<AppUser> {
 	const newUser = new AppUser(
 		{
 			...data,

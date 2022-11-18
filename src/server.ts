@@ -7,16 +7,18 @@ import rootRouter from './app/app.routes';
 import { sequelize } from './app/libs/database';
 import { AuthController } from '@lvdkleij/authentication-middleware';
 import { config } from './config';
-import { Kafka } from 'kafkajs';
+import { Kafka, Partitioners } from 'kafkajs';
 
 const app = express();
 
-// const kafka = new Kafka({
-// 	clientId: 'user',
-// 	brokers: ['kafka:9092'],
-// });
+const kafka = new Kafka({
+	clientId: 'user',
+	brokers: ['kafka:9092'],
+});
 
-// export const kafkaProducer = kafka.producer();
+export const kafkaProducer = kafka.producer({
+	createPartitioner: Partitioners.DefaultPartitioner,
+});
 
 // Middelware
 app.use(helmet());
@@ -35,7 +37,6 @@ export const authController = new AuthController(config.database, {
 const start = async (): Promise<void> => {
 	try {
 		await sequelize.sync();
-		// https://itnext.io/a-boilerplate-for-graphql-sequilize-postgresql-on-node-4eb68c9596bc
 		app.listen(process.env.PORT);
 	} catch (error) {
 		console.error(error);

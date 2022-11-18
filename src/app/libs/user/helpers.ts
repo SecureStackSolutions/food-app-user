@@ -28,6 +28,5 @@ export function sendVerificationEmail(to: string, verificationCode: string) {
 		if (err) {
 			console.log(err);
 		}
-		console.log(info);
 	});
 }

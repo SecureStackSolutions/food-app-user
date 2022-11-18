@@ -3,7 +3,7 @@ import { config } from '../../../config';
 
 const sequelize = new Sequelize({
 	...config.database,
-	logging: console.log,
+	logging: false,
 	models: [__dirname + '/models/*.model.ts'],
 	modelMatch: (filename: string, member: string) => {
 		return (
