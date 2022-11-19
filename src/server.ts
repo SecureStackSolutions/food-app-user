@@ -13,7 +13,7 @@ const app = express();
 
 const kafka = new Kafka({
 	clientId: 'user',
-	brokers: ['kafka:9092'],
+	brokers: [`kafka:${process.env.KAFKA_BROKER}`],
 });
 
 export const kafkaProducer = kafka.producer({
@@ -36,7 +36,7 @@ export const authController = new AuthController(config.database, {
 
 const start = async (): Promise<void> => {
 	try {
-		await sequelize.sync();
+		await sequelize.sync({ force: true });
 		app.listen(process.env.PORT);
 	} catch (error) {
 		console.error(error);

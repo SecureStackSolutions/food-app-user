@@ -21,4 +21,4 @@ RUN npm i --omit=dev
 RUN rm -f .npmrc
 COPY --from=builder /app/www .
 RUN npm install pm2 -g
-CMD ["pm2-runtime","server.js"]
+CMD ["pm2-runtime", "server.js"]

@@ -27,7 +27,7 @@ export async function verifyVerificationCodeControl(data: {
 		const event = { userId: user.id };
 		await kafkaProducer.connect();
 		await kafkaProducer.send({
-			topic: 'user',
+			topic: 'userFirstTimeLogin',
 			messages: [{ value: userEventType.toBuffer(event) }],
 		});
 		await kafkaProducer.disconnect();
