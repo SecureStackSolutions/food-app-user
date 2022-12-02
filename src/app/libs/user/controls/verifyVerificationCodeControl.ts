@@ -1,5 +1,3 @@
-import { userEventType } from '../../../../eventTypes';
-import { kafkaProducer } from '../../../../server';
 import { AppUser } from '../../database/models';
 import { getUserByEmail } from '../services/getUserByEmail';
 
@@ -24,13 +22,6 @@ export async function verifyVerificationCodeControl(data: {
 
 	if (!user.isVerified) {
 		await AppUser.update({ isVerified: true }, { where: { id: user.id } });
-		const event = { userId: user.id };
-		await kafkaProducer.connect();
-		await kafkaProducer.send({
-			topic: 'userFirstTimeLogin',
-			messages: [{ value: userEventType.toBuffer(event) }],
-		});
-		await kafkaProducer.disconnect();
 	}
 
 	return user;

@@ -1,5 +1,8 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
+import { userEventType } from 'src/eventTypes';
 import { authController } from '../../../server';
+import { AppUser } from '../database/models';
 import { createNewUserControl } from './controls/createNewUserControl';
 import { generateVerificationCodeControl } from './controls/generateVerificationCodeControl';
 import { verifyVerificationCodeControl } from './controls/verifyVerificationCodeControl';
@@ -63,10 +66,9 @@ export class UserController {
 		res: Response
 	) {
 		try {
-			const { email, name, id } = await verifyVerificationCodeControl(
-				req.body
-			);
-			console.log(email, name, id);
+			const { email, name, id, isVerified } =
+				await verifyVerificationCodeControl(req.body);
+
 			await authController.createTokens(
 				{ email, name, userId: id.toString() },
 				res
@@ -77,6 +79,7 @@ export class UserController {
 				.send({ type: 'SUCCESS', message: 'User logged in' });
 		} catch (err) {
 			if (err instanceof Error) {
+				console.log(err);
 				return res.status(400).send({
 					type: 'ERROR',
 					message: err.message,

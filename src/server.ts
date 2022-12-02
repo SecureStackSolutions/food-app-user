@@ -11,14 +11,14 @@ import { Kafka, Partitioners } from 'kafkajs';
 
 const app = express();
 
-const kafka = new Kafka({
-	clientId: 'user',
-	brokers: [`kafka:${process.env.KAFKA_BROKER}`],
-});
+// const kafka = new Kafka({
+// 	clientId: 'user',
+// 	brokers: [`kafka:${process.env.KAFKA_BROKER}`],
+// });
 
-export const kafkaProducer = kafka.producer({
-	createPartitioner: Partitioners.DefaultPartitioner,
-});
+// export const kafkaProducer = kafka.producer({
+// 	createPartitioner: Partitioners.DefaultPartitioner,
+// });
 
 // Middelware
 app.use(helmet());

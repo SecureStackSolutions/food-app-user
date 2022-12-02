@@ -2,6 +2,7 @@
 	"dependencies": {
 		"@lvdkleij/authentication-middleware": "1.0.64",
 		"avsc": "^5.7.7",
+		"axios": "^1.2.0",
 		"body-parser": "1.20.0",
 		"cors": "2.8.5",
 		"dotenv": "^16.0.3",
@@ -14,6 +15,7 @@
 		"sequelize": "^6.25.3",
 		"sequelize-typescript": "^2.1.5",
 		"ts-node": "~10.9.1",
+		"zeromq": "6.0.0-beta.14",
 		"tslib": "^2.4.0"
 	},
 	"devDependencies": {
