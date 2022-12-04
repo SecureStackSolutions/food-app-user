@@ -1,20 +1,17 @@
 {
 	"dependencies": {
-		"@lvdkleij/authentication-middleware": "1.0.64",
-		"avsc": "^5.7.7",
-		"axios": "^1.2.0",
 		"body-parser": "1.20.0",
 		"cors": "2.8.5",
 		"dotenv": "^16.0.3",
 		"express": "4.18.1",
 		"helmet": "^6.0.0",
 		"jsonwebtoken": "^8.5.1",
-		"kafkajs": "^2.2.2",
 		"nodemailer": "^6.8.0",
 		"pg": "8.8.0",
 		"sequelize": "^6.25.3",
 		"sequelize-typescript": "^2.1.5",
 		"ts-node": "~10.9.1",
+		"axios": "^1.2.0",
 		"tslib": "^2.4.0"
 	},
 	"devDependencies": {

@@ -6,7 +6,6 @@ WORKDIR /app
 RUN npm cache clean --force
 
 # Install dependencies
-COPY .npmrc .npmrc  
 COPY package*.json ./
 
 RUN npm install
