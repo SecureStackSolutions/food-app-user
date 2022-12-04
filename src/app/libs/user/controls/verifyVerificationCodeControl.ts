@@ -23,14 +23,6 @@ export async function verifyVerificationCodeControl(data: {
 
     if (!user.isVerified) {
         await AppUser.update({ isVerified: true }, { where: { id: user.id } });
-        const response = await axios.post(
-            `http://application-gateway:8000/authenticate-user/createTokens`,
-            {
-                name: user.name,
-                email: user.email,
-                id: user.id,
-            }
-        );
     }
 
     return user;
