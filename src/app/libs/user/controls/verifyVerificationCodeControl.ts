@@ -1,6 +1,5 @@
 import { AppUser } from '../../database/models';
 import { getUserByEmail } from '../services/getUserByEmail';
-import axios from 'axios';
 
 export async function verifyVerificationCodeControl(data: {
     email: string;
@@ -19,10 +18,6 @@ export async function verifyVerificationCodeControl(data: {
 
     if (codeIsExpired) {
         throw Error('Expired verification code');
-    }
-
-    if (!user.isVerified) {
-        await AppUser.update({ isVerified: true }, { where: { id: user.id } });
     }
 
     return user;

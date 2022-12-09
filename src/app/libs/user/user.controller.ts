@@ -63,37 +63,36 @@ export class UserController {
         res: Response
     ) {
         try {
-            const { email, name, id, isVerified } =
-                await verifyVerificationCodeControl(req.body);
+            const { email, name, id } = await verifyVerificationCodeControl(
+                req.body
+            );
 
             const response = await axios.post(
                 `http://application-gateway:8000/authenticate/createTokens`,
-                { name, email, id }
+                { name, email, id },
+                {
+                    headers: {
+                        'kong-key-auth': 'mykey',
+                    },
+                }
             );
 
             const { accessToken, refreshToken } = response.data.results[0];
 
-            await res.cookie(
-                'THIS_IS_NOT_THE_REFRESH_TOKEN_YOU_ARE_LOOKING_FOR',
-                refreshToken,
-                {
-                    httpOnly: true,
-                    sameSite: 'none',
-                    secure: true,
-                    maxAge: 24 * 60 * 60 * 1000 * 90,
-                }
-            );
-
-            await res.cookie('YOU_CAN_GO_ABOUT_YOUR_BUSINESS', 'MOVE_ALONG', {
+            await res.cookie('refresh-token', refreshToken, {
+                httpOnly: true,
                 sameSite: 'none',
                 secure: true,
                 maxAge: 24 * 60 * 60 * 1000 * 90,
             });
 
-            await res.setHeader(
-                'THIS_IS_NOT_THE_ACCESS_TOKEN_YOU_ARE_LOOKING_FOR',
-                accessToken
-            );
+            await res.cookie('refresh-token-empty', 'empty', {
+                sameSite: 'none',
+                secure: true,
+                maxAge: 24 * 60 * 60 * 1000 * 90,
+            });
+
+            await res.setHeader('access-token', accessToken);
 
             return res
                 .status(200)

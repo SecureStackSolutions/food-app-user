@@ -7,7 +7,6 @@ COPY tsconfig.json .
 COPY src ./src
 RUN npm i
 RUN npm run build --omit=dev
-RUN rm -f .npmrc
 
 ## this is stage two , where the app actually runs
 FROM node:18-alpine3.15
@@ -15,9 +14,7 @@ ARG NPM_TOKEN
 WORKDIR /app
 RUN npm cache clean --force
 COPY package*.json .
-COPY .npmrc .npmrc
 RUN npm i --omit=dev
-RUN rm -f .npmrc
 COPY --from=builder /app/www .
 RUN npm install pm2 -g
 CMD ["pm2-runtime", "server.js"]
