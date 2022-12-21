@@ -2,6 +2,10 @@ import { Dialect } from 'sequelize';
 
 const _config: any = {
     dev: {
+        secrets: {
+            refreshTokenPayloadSecret: process.env
+                .REFRESH_TOKEN_PAYLOAD_SECRET as string,
+        },
         database: {
             username: 'postgres',
             password: 'postgres_password',
@@ -12,6 +16,10 @@ const _config: any = {
         },
     },
     prod: {
+        secrets: {
+            refreshTokenPayloadSecret: process.env
+                .REFRESH_TOKEN_PAYLOAD_SECRET as string,
+        },
         database: {
             username: process.env.DB_USERNAME!,
             password: process.env.DB_PASSWORD!,

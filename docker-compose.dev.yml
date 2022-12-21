@@ -16,82 +16,24 @@ services:
         stdin_open: true
         tty: true
 
-    zookeeper:
-        image: 'confluentinc/cp-zookeeper'
-        ports:
-            - '2181'
-        environment:
-            - ZOOKEEPER_CLIENT_PORT=2181
-            - ZOOKEEPER_TICK_TIME=2000
-            - ZOOKEEPER_SYNC_LIMIT=2
-        networks:
-            - kafka
-
-    kafka:
-        image: 'confluentinc/cp-kafka'
-        ports:
-            - '9092'
-        environment:
-            - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-            - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-            - KAFKA_BROKER_ID=1
-            - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-        depends_on:
-            - zookeeper
-        networks:
-            - kafka
-        healthcheck:
-            test: nc -z kafka 9092 || exit -1
-            start_period: 15s
-            interval: 5s
-            timeout: 10s
-            retries: 10
-
     backend-user:
         build:
             dockerfile: dockerfiles/Dockerfile.dev
             context: .
-            args:
-                - NPM_TOKEN=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
         environment:
-            - ENVIRONMENT=prod
-            - DB_USERNAME=postgres
-            - DB_PASSWORD=postgres_password
-            - DB_DATABASE=postgres
-            - DB_HOST=postgres
-            - DB_PORT=5432
-            - DB_DIALECT=postgres
-            - REFRESH_TOKEN_PAYLOAD_SECRET=my-super-secret3
+            - ENVIRONMENT=dev
             - PORT=49202
-            - KAFKA_BROKER=9092
         volumes:
             - /app/node_modules
             - .:/app
         ports:
             - '49202:49202'
         networks:
-            - microservice
             - database
-            - kafka
         depends_on:
-            kafka:
-                condition: service_healthy
             postgres:
                 condition: service_healthy
-        healthcheck:
-            test: wget --no-verbose --tries=1 --spider http://backend-user:49202 || exit 1
-            start_period: 15s
-            interval: 5s
-            timeout: 10s
-            retries: 10
+
 networks:
-    frontend:
-        driver: bridge
-    microservice:
-        driver: bridge
     database:
-        driver: bridge
-    kafka:
-        driver: bridge
-    application-gateway:
         driver: bridge

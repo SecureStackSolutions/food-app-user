@@ -1,8 +1,9 @@
 import { AppUser, UserVerification } from '../../database/models';
+import { UserNotFoundError } from './getUserByEmail';
 
-export async function getUserByEmail(
+export async function getUserById(
     data: {
-        email: string;
+        id: number;
     },
     includeUserVerification = false
 ): Promise<AppUser> {
@@ -15,11 +16,4 @@ export async function getUserByEmail(
         throw new UserNotFoundError();
     }
     return user;
-}
-
-export class UserNotFoundError extends Error {
-    constructor(message = 'User not found') {
-        super(message);
-        this.name = 'UserNotFoundError';
-    }
 }

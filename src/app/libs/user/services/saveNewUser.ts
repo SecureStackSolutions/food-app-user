@@ -16,4 +16,4 @@ export async function saveNewUser(data: InsertUserType): Promise<AppUser> {
     return newUser.save();
 }
 
-export type InsertUserType = { name: string; email: string };
+export type InsertUserType = { email: string };

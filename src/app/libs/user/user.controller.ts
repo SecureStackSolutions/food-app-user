@@ -1,36 +1,77 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
-import { createNewUserControl } from './controls/createNewUserControl';
+import { loginUserControl } from './controls/loginUserControl';
 import { generateVerificationCodeControl } from './controls/generateVerificationCodeControl';
+import { updateUserInfoControl } from './controls/updateUserInfoControl';
 import { verifyVerificationCodeControl } from './controls/verifyVerificationCodeControl';
+import { getUserFromCookies } from '../database/shared/getUserFromCookies';
+import { generateTokens } from '../database/shared/generateTokens';
 
 interface CustomRequest<T> extends Request {
     body: T;
 }
 
 export class UserController {
-    static async signUpUser(
-        req: CustomRequest<{ name: string; email: string }>,
+    static async loginUser(
+        req: CustomRequest<{ email: string }>,
         res: Response
     ) {
         try {
-            const user = await createNewUserControl(req.body);
-            return res.status(200).send({
-                type: 'SUCCESS',
-                results: [{ validUntil: user.verification.validUntil }],
-            });
+            const user = await loginUserControl(req.body);
+            return res.status(200).send(
+                createResponse({
+                    type: 'Success',
+                    extras: { validUntil: user.verification.validUntil },
+                })
+            );
         } catch (err) {
             if (err instanceof Error) {
-                return res.status(400).send({
-                    type: 'ERROR',
-                    message: err.message,
-                });
+                createResponse({ type: 'Error', message: err.message });
             }
 
-            return res.status(400).send({
-                type: 'ERROR',
-                message: 'Something went wrong',
+            return res.status(400).send(
+                createResponse({
+                    type: 'Error',
+                    message: 'An unknown error occured',
+                })
+            );
+        }
+    }
+
+    static async updateUser(
+        req: CustomRequest<{ name: string }>,
+        res: Response
+    ) {
+        try {
+            const { userId } = getUserFromCookies(req.headers.cookie!);
+            const { email, name, id } = await updateUserInfoControl({
+                name: req.body.name,
+                userId,
             });
+
+            await generateTokens(res, name, email, id);
+
+            return res.status(200).send(
+                createResponse({
+                    type: 'Success',
+                    message: 'User information is updated',
+                })
+            );
+        } catch (err) {
+            if (err instanceof Error) {
+                return res
+                    .status(400)
+                    .send(
+                        createResponse({ type: 'Error', message: err.message })
+                    );
+            }
+
+            return res.status(400).send(
+                createResponse({
+                    type: 'Error',
+                    message: 'An unknown error occured',
+                })
+            );
         }
     }
 
@@ -40,21 +81,25 @@ export class UserController {
     ) {
         try {
             const validUntil = await generateVerificationCodeControl(req.body);
-            return res.status(200).send({
-                type: 'SUCCESS',
-                results: [{ validUntil }],
-            });
+            return res
+                .status(200)
+                .send(
+                    createResponse({ type: 'Success', extras: { validUntil } })
+                );
         } catch (err) {
             if (err instanceof Error) {
-                return res.status(400).send({
-                    type: 'ERROR',
-                    message: err.message,
-                });
+                return res
+                    .status(400)
+                    .send(
+                        createResponse({ type: 'Error', message: err.message })
+                    );
             }
-            return res.status(400).send({
-                type: 'ERROR',
-                message: 'Something went wrong',
-            });
+            return res.status(400).send(
+                createResponse({
+                    type: 'Error',
+                    message: 'An unknown error occured',
+                })
+            );
         }
     }
 
@@ -67,49 +112,51 @@ export class UserController {
                 req.body
             );
 
-            const response = await axios.post(
-                `http://application-gateway:8000/authenticate/createTokens`,
-                { name, email, id },
-                {
-                    headers: {
-                        'kong-key-auth': 'mykey',
-                    },
-                }
+            await generateTokens(res, name, email, id);
+
+            return res.status(200).send(
+                createResponse({
+                    type: 'Success',
+                    message: 'User logged in',
+                    extras: { userShouldSetInfo: name === null },
+                })
             );
-
-            const { accessToken, refreshToken } = response.data.results[0];
-
-            await res.cookie('refresh-token', refreshToken, {
-                httpOnly: true,
-                sameSite: 'none',
-                secure: true,
-                maxAge: 24 * 60 * 60 * 1000 * 90,
-            });
-
-            await res.cookie('refresh-token-empty', 'empty', {
-                sameSite: 'none',
-                secure: true,
-                maxAge: 24 * 60 * 60 * 1000 * 90,
-            });
-
-            await res.setHeader('access-token', accessToken);
-
-            return res
-                .status(200)
-                .send({ type: 'SUCCESS', message: 'User logged in' });
         } catch (err) {
             if (err instanceof Error) {
                 console.log(err);
-                return res.status(400).send({
-                    type: 'ERROR',
-                    message: err.message,
-                });
+                return res
+                    .status(400)
+                    .send(
+                        createResponse({ type: 'Error', message: err.message })
+                    );
             } else {
-                return res.status(400).send({
-                    type: 'ERROR',
-                    message: 'An unknown error happened',
-                });
+                return res.status(400).send(
+                    createResponse({
+                        type: 'Error',
+                        message: 'An unknown error occured',
+                    })
+                );
             }
         }
     }
+}
+
+interface createResponseInput {
+    type: string;
+    message?: string;
+    results?: ResultsResponseType[];
+    extras?: ResultsResponseType;
+}
+
+function createResponse({
+    type,
+    message = '',
+    results = [],
+    extras = {},
+}: createResponseInput) {
+    return { type, message, results, extras };
+}
+
+interface ResultsResponseType {
+    [key: string]: any;
 }
