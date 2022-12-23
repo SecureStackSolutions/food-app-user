@@ -1,11 +1,9 @@
-import axios from 'axios';
 import { Request, Response } from 'express';
 import { loginUserControl } from './controls/loginUserControl';
 import { generateVerificationCodeControl } from './controls/generateVerificationCodeControl';
 import { updateUserInfoControl } from './controls/updateUserInfoControl';
 import { verifyVerificationCodeControl } from './controls/verifyVerificationCodeControl';
-import { getUserFromCookies } from '../database/shared/getUserFromCookies';
-import { generateTokens } from '../database/shared/generateTokens';
+import { generateTokens } from '../shared/generateTokens';
 
 interface CustomRequest<T> extends Request {
     body: T;
@@ -39,17 +37,26 @@ export class UserController {
     }
 
     static async updateUser(
-        req: CustomRequest<{ name: string }>,
+        req: CustomRequest<{
+            name: string;
+            _extras: {
+                authenticationTokenPayload: {
+                    [key: string]: any;
+                };
+            };
+        }>,
         res: Response
     ) {
         try {
-            const { userId } = getUserFromCookies(req.headers.cookie!);
-            const { email, name, id } = await updateUserInfoControl({
+            const { email, userId } =
+                req.body._extras.authenticationTokenPayload;
+
+            const { name } = await updateUserInfoControl({
                 name: req.body.name,
-                userId,
+                userId: +userId,
             });
 
-            await generateTokens(res, name, email, id);
+            await generateTokens(res, name, email, +userId);
 
             return res.status(200).send(
                 createResponse({
@@ -123,7 +130,6 @@ export class UserController {
             );
         } catch (err) {
             if (err instanceof Error) {
-                console.log(err);
                 return res
                     .status(400)
                     .send(

@@ -1,3 +1,4 @@
+import { AppUser } from '../../database/models';
 import {
     getFutureDate,
     getVerificationCode,
@@ -8,8 +9,9 @@ import { updateVerificationCodeByUserId } from '../services/updateVerificationCo
 
 export async function generateVerificationCodeControl(data: {
     email: string;
+    user?: AppUser;
 }): Promise<Date> {
-    const user = await getUserByEmail(data);
+    const user = data.user ?? (await getUserByEmail(data));
     const validUntil = getFutureDate({ seconds: 90 });
     const code = getVerificationCode();
     await updateVerificationCodeByUserId(

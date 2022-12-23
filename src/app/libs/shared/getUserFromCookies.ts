@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import CryptoJS from 'crypto-js';
-import { config } from '../../../../config';
+import { config } from '../../../config';
 
 export function getUserFromCookies(cookies: string | undefined): {
     userId: number;

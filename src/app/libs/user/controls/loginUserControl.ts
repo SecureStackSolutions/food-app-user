@@ -1,7 +1,7 @@
 import { AppUser } from '../../database/models';
-import { sendVerificationEmail } from '../helpers';
 import { getUserByEmail, UserNotFoundError } from '../services/getUserByEmail';
 import { saveNewUser } from '../services/saveNewUser';
+import { generateVerificationCodeControl } from './generateVerificationCodeControl';
 
 export async function loginUserControl(
     data: saveNewUserType
@@ -16,7 +16,7 @@ export async function loginUserControl(
             throw err;
         }
     }
-    sendVerificationEmail(user.email, user.verification.code);
+    await generateVerificationCodeControl({ email: user.email, user });
     return user;
 }
 
