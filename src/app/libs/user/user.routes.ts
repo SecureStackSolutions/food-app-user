@@ -3,12 +3,12 @@ import { UserController } from './user.controller';
 
 const router = Router();
 
-router.post('/loginUser', UserController.loginUser);
+router.post('/sendAuthenticationCode', UserController.loginUser);
 router.post('/updateUser', UserController.updateUser);
 router.post(
     '/generateVerificationCode',
     UserController.generateVerificationCode
 );
-router.post('/verifyUser', UserController.verifyVerificationCode);
+router.post('/verifyAuthenticationCode', UserController.verifyVerificationCode);
 
 export { router };
